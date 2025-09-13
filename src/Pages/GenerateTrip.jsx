@@ -2,10 +2,11 @@ import { useState, useEffect } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
 
-const GenerateTrip = () => 
+const GenerateTrip = ({setTripData}) => 
 {
-    const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImM3ZjRhNTExNDc4YzQyMTFhMjJiN2RkYTgzNWQ2ZGRiIiwiaCI6Im11cm11cjY0In0="
+    const navigate = useNavigate()
 
     //Setting the query parameters and the results
     const [pickupQuery, setPickupQuery] = useState("");
@@ -33,7 +34,7 @@ const GenerateTrip = () =>
     {
         if(pickupQuery.length > 2)
         {
-            fetch(`https://api.openrouteservice.org/geocode/autocomplete?api_key=${ORS_API_KEY}&text=${pickupQuery}`)
+            fetch(`http://127.0.0.1:8000/api/geocode?text=${pickupQuery}`)
             .then(response => response.json())
             .then(data => 
             {
@@ -48,11 +49,10 @@ const GenerateTrip = () =>
     {
         if(dropoffQuery.length > 2)
         {
-            fetch(`https://api.openrouteservice.org/geocode/autocomplete?api_key=${ORS_API_KEY}&text=${dropoffQuery}`)
+            fetch(`http://127.0.0.1:8000/api/geocode?text=${dropoffQuery}`)
             .then(response => response.json())
             .then(data => 
             {
-                console.log(data)
                 setDropoffResults(data.features || [])
             })
             .catch(console.error)
@@ -68,8 +68,30 @@ const GenerateTrip = () =>
             return;
         }
 
-        const data = {pickupResults, dropoffResults, cycle}
-        console.log("Form submitted: ", data)
+        const data = {
+            "current_location": currentLocation,
+            "pickup_location": [selectedPickup[1], selectedPickup[0]],
+            "dropoff_location": [selectedDropoff[1], selectedDropoff[0]],
+            "cycle_used": cycle
+        }
+
+        fetch("http://127.0.0.1:8000/api/plan-trip/",
+        {
+            method: "POST",
+            headers: 
+            {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => 
+        {
+            setTripData(data)
+            navigate("/trip-details")
+        }
+        )
     }
 
     return ( 
@@ -97,7 +119,7 @@ const GenerateTrip = () =>
                                             <li key={idx} className="p-2 hover:bg-gray-200 cursor-pointer" onClick={()=>
                                             {
                                                 setPickupQuery(item.properties.label)
-                                                setSelectedPickup(item.properties.label)
+                                                setSelectedPickup(item.geometry.coordinates)
                                                 setPickupResults([])
                                             }
                                             }>{item.properties.label}</li>
@@ -119,7 +141,7 @@ const GenerateTrip = () =>
                                             <li key={idx} className="p-2 hover:bg-gray-200 cursor-pointer" onClick={()=>
                                             {
                                                 setDropoffQuery(item.properties.label)
-                                                setSelectedDropoff(item.properties.label)
+                                                setSelectedDropoff(item.geometry.coordinates)
                                                 setDropoffResults([])
                                             }
                                             }>{item.properties.label}</li>
@@ -131,8 +153,8 @@ const GenerateTrip = () =>
                     </div>
                     <select defaultValue="Select your current cycle" className="select bg-inherit border-black w-full z-50" value={cycle} onChange={e => setCycle(e.target.value)}>
                         <option disabled={true}>Select your current cycle</option>
-                        <option value={"11"}>11 hour cycle</option>
-                        <option value={"14"}>14 hour cycle</option>
+                        <option value={11}>11 hour cycle</option>
+                        <option value={14}>14 hour cycle</option>
                     </select>
                 </div>
 

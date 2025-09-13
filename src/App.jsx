@@ -1,17 +1,22 @@
 import './App.css'
-import GenerateTrip from './Pages/Trip'
+import GenerateTrip from './Pages/GenerateTrip'
 import { ToastContainer } from 'react-toastify'
+import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import TripSummary from './Pages/TripDetails'
 
-import '@mantine/core/styles.css';
+function App() 
+{
+  const [tripData, setTripData] = useState()
 
-import { MantineProvider } from '@mantine/core'
-
-function App() {
-
+  console.log(tripData)
   return (
-    <div className='bg-white max-w-screen h-screen text-black'>
+    <div className='bg-white max-w-screen min-h-screen text-black'>
       <ToastContainer/>
-      <GenerateTrip/>     
+      <Routes>
+        <Route path='/' element={<GenerateTrip setTripData={setTripData}/>}></Route>
+        <Route path='/trip-details' element={<TripSummary tripData={tripData}/>}></Route>
+      </Routes>     
     </div>
   )
 }
