@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
-import { FiClock, FiMapPin, FiTrendingUp } from "react-icons/fi"
+import { FiClock, FiMapPin, FiTrendingUp, FiX } from "react-icons/fi"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
@@ -10,6 +10,9 @@ const TripSummary = () =>
 {
     const {id} = useParams()
     const [trip, setTrip] = useState()
+
+    const [legModal, setLegModal] = useState(false)
+    const [selectedLeg, setSelectedLeg] = useState()
 
     const fetchData = async () => 
     {
@@ -45,7 +48,7 @@ const TripSummary = () =>
         <div className="p-4 space-y-2">
             {/* Map at the top */}
             <div className="h-[400px] w-full rounded-lg overflow-hidden shadow">
-                <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full">
+                <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
                 <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <Marker position={current_location}>
                         <Popup>Current location</Popup>
@@ -59,10 +62,18 @@ const TripSummary = () =>
 
                     {/* Render each leg with different color */}
                     {
-                        legs?.map((leg, idx) => {
+                        legs?.map((leg, idx) => 
+                        {
                             const coords = leg.geometry?.coordinates?.map(c => [c[1], c[0]]) || []
                             return (
-                                <Polyline key={`leg-${idx}`} positions={coords} color={legColors[idx % legColors.length]} weight={5}/>
+                                <Polyline key={`leg-${idx}`} positions={coords} color={legColors[idx % legColors.length]} weight={5} eventHandlers={
+                                    {
+                                        click: ()=> {
+                                            setSelectedLeg({ steps: leg.steps, idx })
+                                            setLegModal(true)
+                                        }
+                                    }
+                                }/>
                             )
                         })
                     }
@@ -91,6 +102,32 @@ const TripSummary = () =>
                     </div>
                 </div>
             </div>
+
+            {/* Steps modal */}
+            {
+                legModal &&
+                    <div className="fixed inset-0 z-50 backdrop-blur-sm bg-opacity-80 flex justify-center items-center p-4">
+                        <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-lg shadow-lg overflow-y-auto p-6 relative">
+                            <button className="absolute top-4 right-4 text-gray-700 hover:text-gray-900" onClick={() => 
+                            {
+                                setSelectedLeg(null)
+                                setLegModal(false)
+                            }}>
+                                <FiX size={24} />
+                            </button>
+                            <h2 className="text-xl font-semibold mb-4" style={{ color: legColors[selectedLeg.idx % legColors.length] }}>Leg {selectedLeg.idx + 1} Steps</h2>
+                            <ol className="list-decimal list-inside space-y-2">
+                            {
+                                selectedLeg.steps.map((step, idx) => (
+                                    <li key={`step-${idx}`}> 
+                                        {step.instruction} ({(step.distance / 1609.34).toFixed(2)} mi, {(step.duration / 3600).toFixed(2)} hrs)
+                                    </li>
+                                ))
+                            }
+                            </ol>
+                        </div>
+                    </div>
+            }
         </div>
     )
 }

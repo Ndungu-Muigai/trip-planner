@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify'
 import { Routes, Route } from 'react-router-dom'
 
 import GenerateTrip from './Pages/GenerateTrip'
-import TripSummary from './Pages/TripDetails'
 import Trip from './Pages/Trip'
 
 function App() 
