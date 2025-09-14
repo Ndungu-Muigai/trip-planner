@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import TripSummary from './Pages/TripDetails'
+import Trip from './Pages/Trip'
 
 function App() 
 {
@@ -15,6 +16,7 @@ function App()
       <ToastContainer/>
       <Routes>
         <Route path='/' element={<GenerateTrip setTripData={setTripData}/>}></Route>
+        <Route path='/trip' element={<Trip/>}></Route>
         <Route path='/trip-details' element={<TripSummary tripData={tripData}/>}></Route>
       </Routes>     
     </div>
