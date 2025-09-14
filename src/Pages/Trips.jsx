@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { toast } from "react-toastify"
 import { Link } from "react-router-dom"
 
-const TRIPS_PER_PAGE = 5
+const TRIPS_PER_PAGE = 4
 
 const AllTrips = () => 
 {
@@ -47,8 +47,11 @@ const AllTrips = () =>
     const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages))
 
     return (
-        <div className="p-2.5 w-11/12 mx-auto">
-            <h2 className="text-2xl font-semibold mb-1.5">All Trips</h2>
+        <div className="p-3 w-11/12 mx-auto">
+            <div className="flex justify-between my-2">
+                <h2 className="text-2xl font-semibold mb-1.5">All Trips</h2>
+                <Link to={"/"} className="btn btn-success text-white">Create a new trip</Link>
+            </div>
 
             <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
                 <thead className="bg-gray-100">
@@ -97,7 +100,7 @@ const AllTrips = () =>
             {
                 !loading && currentTrips.length > 0 && 
                 (
-                    <div className="flex justify-center gap-4 mt-2.5">
+                    <div className="flex justify-center gap-4 mt-4">
                         <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
                         <span className="px-2 py-2">Page {currentPage} of {totalPages}</span>
                         <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
@@ -161,11 +164,11 @@ const TripRow = ({ trip, locationCache }) =>
     : 
         (
             <tr className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{pickupName}</td>
-                <td className="py-2 px-4">{dropoffName}</td>
-                <td className="py-2 px-4">{trip.distance}</td>
-                <td className="py-2 px-4">{trip.duration}</td>
-                <td className="py-2 px-4">
+                <td className="py-3 px-4">{pickupName}</td>
+                <td className="py-3 px-4">{dropoffName}</td>
+                <td className="py-3 px-4">{trip.distance}</td>
+                <td className="py-3 px-4">{trip.duration}</td>
+                <td className="py-3 px-4">
                     <Link to={`/trips/${trip.id}`} className="btn btn-info text-white transition">View</Link>
                 </td>
             </tr>
