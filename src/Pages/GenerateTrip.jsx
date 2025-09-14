@@ -89,7 +89,7 @@ const GenerateTrip = ({setTripData}) =>
         .then(data => 
         {
             setTripData(data)
-            navigate("/trip-details")
+            navigate("/trips")
         }
         )
     }

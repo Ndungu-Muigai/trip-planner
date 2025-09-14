@@ -16,7 +16,7 @@ function App()
       <ToastContainer/>
       <Routes>
         <Route path='/' element={<GenerateTrip setTripData={setTripData}/>}></Route>
-        <Route path='/trip' element={<Trip/>}></Route>
+        <Route path='/trips' element={<Trip/>}></Route>
         <Route path='/trip-details' element={<TripSummary tripData={tripData}/>}></Route>
       </Routes>     
     </div>
