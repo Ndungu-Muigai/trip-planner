@@ -17,6 +17,14 @@ const GenerateTrip = ({setTripData}) =>
     const [selectedPickup, setSelectedPickup] = useState(null);
     const [selectedDropoff, setSelectedDropoff] = useState(null)
 
+    // Prevent double fetch after selecting
+    const [pickupSelected, setPickupSelected] = useState(false)
+    const [dropoffSelected, setDropoffSelected] = useState(false)
+
+    //States to track if the search results have been fetched
+    const [pickupLoading, setPickupLoading] = useState(false);
+    const [dropoffLoading, setDropoffLoading] = useState(false);
+
     const [currentLocation, setCurrentLocation] = useState(null);
     const [cycle, setCycle] = useState()
 
@@ -32,32 +40,42 @@ const GenerateTrip = ({setTripData}) =>
     //Searching pickup locations based on user input
     useEffect(()=>
     {
-        if(pickupQuery.length > 2)
+        if(pickupQuery.length > 2 && !pickupSelected)
         {
-            fetch(`http://127.0.0.1:8000/api/geocode?text=${pickupQuery}`)
-            .then(response => response.json())
-            .then(data => 
+            setPickupLoading(true)
+            const timeOut = setTimeout(() => 
             {
-                setPickupResults(data.features || [])
-            })
-            .catch(console.error)
+                fetch(`http://127.0.0.1:8000/api/search-locations?text=${pickupQuery}`)
+                .then(response => response.json())
+                .then(data => setPickupResults(data.features || []))
+                .catch(err => toast.error(err))
+                .finally(()=> setPickupLoading(false))
+            }, 500);
+
+            return () => clearTimeout(timeOut)
         }
-    },[pickupQuery])
+
+    },[pickupQuery, pickupSelected])
 
     //Searching dropoff locations based on user input
     useEffect(()=>
     {
-        if(dropoffQuery.length > 2)
+        if(dropoffQuery.length > 2 && !dropoffSelected)
         {
-            fetch(`http://127.0.0.1:8000/api/geocode?text=${dropoffQuery}`)
-            .then(response => response.json())
-            .then(data => 
+            setDropoffLoading(true)
+            const timeOut = setTimeout(() => 
             {
-                setDropoffResults(data.features || [])
-            })
-            .catch(console.error)
+                fetch(`http://127.0.0.1:8000/api/search-locations?text=${dropoffQuery}`)
+                .then(response => response.json())
+                .then(data => setDropoffResults(data.features || []))
+                .catch(err => toast.error(err))   
+                .finally(()=> setDropoffLoading(false))
+            }, 500);
+
+            return () => clearTimeout(timeOut)
         }
-    },[dropoffQuery])
+
+    },[dropoffQuery, dropoffSelected])
 
     const generateTrip = e =>
     {
@@ -108,7 +126,16 @@ const GenerateTrip = ({setTripData}) =>
             <form onSubmit={generateTrip} className="mt-9">
                 <div className="flex flex-col justify-center md:flex-row gap-6">
                     <div className="relative w-full">
-                        <input type="search" className="input bg-inherit border border-black " required placeholder="Enter pick up location" value={pickupQuery} onChange={e => setPickupQuery(e.target.value)}/>
+                        <input type="search" className="input bg-inherit border border-black " required placeholder="Enter pick up location" value={pickupQuery} onChange={e => 
+                            {
+                                setPickupQuery(e.target.value)
+                                setPickupSelected(false)
+                            }
+                        }/>
+                        {
+                            pickupLoading &&
+                            <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500">Fetching locations</div>
+                        }
                         {
                             pickupResults.length > 0 &&
                             <ul className="absolute z-10 bg-white border border-gray-300 w-full max-h-40 overflow-y-auto">
@@ -121,6 +148,7 @@ const GenerateTrip = ({setTripData}) =>
                                                 setPickupQuery(item.properties.label)
                                                 setSelectedPickup(item.geometry.coordinates)
                                                 setPickupResults([])
+                                                setPickupSelected(true)
                                             }
                                             }>{item.properties.label}</li>
                                         )
@@ -130,7 +158,16 @@ const GenerateTrip = ({setTripData}) =>
                         }
                     </div>
                     <div className="relative w-full">
-                        <input type="search" className="input bg-inherit border border-black " required placeholder="Enter drop off location" value={dropoffQuery} onChange={e => setDropoffQuery(e.target.value)}/>
+                        <input type="search" className="input bg-inherit border border-black " required placeholder="Enter drop off location" value={dropoffQuery} onChange={e => 
+                            {
+                                setDropoffQuery(e.target.value)
+                                setDropoffSelected(false)
+                            }
+                        }/>
+                        {
+                            dropoffLoading &&
+                            <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500">Fetching locations</div>
+                        }
                         {
                             dropoffResults.length > 0 &&
                             <ul className="absolute z-10 bg-white border border-gray-300 w-full max-h-40 overflow-y-auto">
@@ -143,6 +180,7 @@ const GenerateTrip = ({setTripData}) =>
                                                 setDropoffQuery(item.properties.label)
                                                 setSelectedDropoff(item.geometry.coordinates)
                                                 setDropoffResults([])
+                                                setDropoffSelected(true)
                                             }
                                             }>{item.properties.label}</li>
                                         )
