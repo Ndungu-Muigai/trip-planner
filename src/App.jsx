@@ -1,8 +1,11 @@
 import './App.css'
-import GenerateTrip from './Pages/GenerateTrip'
+import "leaflet/dist/leaflet.css"
+
 import { ToastContainer } from 'react-toastify'
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
+
+import GenerateTrip from './Pages/GenerateTrip'
 import TripSummary from './Pages/TripDetails'
 import Trip from './Pages/Trip'
 

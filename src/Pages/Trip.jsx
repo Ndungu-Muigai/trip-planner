@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
-import "leaflet/dist/leaflet.css"
 import { FiInfo, FiClock, FiMap, FiX } from "react-icons/fi"
 import { useState } from "react"
 
