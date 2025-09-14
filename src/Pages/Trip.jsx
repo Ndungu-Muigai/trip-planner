@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
-import "leaflet/dist/leaflet.css"
 import { FiClock, FiMapPin, FiTrendingUp, FiX } from "react-icons/fi"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -45,7 +44,7 @@ const TripSummary = () =>
     const legColors = ["blue", "green", "orange", "purple"]
 
     return (
-        <div className="p-4 space-y-2">
+        <div className="pt-3 w-4/5 mx-auto space-y-2">
             {/* Map at the top */}
             <div className="h-[400px] w-full rounded-lg overflow-hidden shadow">
                 <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
