@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import { CircularProgress } from "@mui/material"
 
-const GenerateTrip = ({setTripData}) => 
+const GenerateTrip = () => 
 {
     const navigate = useNavigate()
 
@@ -46,7 +46,7 @@ const GenerateTrip = ({setTripData}) =>
             setPickupLoading(true)
             const timeOut = setTimeout(() => 
             {
-                fetch(`http://127.0.0.1:8000/api/search-locations?text=${pickupQuery}`)
+                fetch(`http://127.0.0.1:8000/api/locations/search?text=${pickupQuery}`)
                 .then(response => response.json())
                 .then(data => setPickupResults(data.features || []))
                 .catch(err => toast.error(err))
@@ -66,7 +66,7 @@ const GenerateTrip = ({setTripData}) =>
             setDropoffLoading(true)
             const timeOut = setTimeout(() => 
             {
-                fetch(`http://127.0.0.1:8000/api/search-locations?text=${dropoffQuery}`)
+                fetch(`http://127.0.0.1:8000/api/locations/search?text=${dropoffQuery}`)
                 .then(response => response.json())
                 .then(data => setDropoffResults(data.features || []))
                 .catch(err => toast.error(err))   
@@ -78,7 +78,7 @@ const GenerateTrip = ({setTripData}) =>
 
     },[dropoffQuery, dropoffSelected])
 
-    const generateTrip = e =>
+    const generateTrip = async e =>
     {
         e.preventDefault()
         if(!selectedPickup || !selectedDropoff || !cycle)
@@ -87,30 +87,44 @@ const GenerateTrip = ({setTripData}) =>
             return;
         }
 
-        const data = {
+        const body = 
+        {
             "current_location": currentLocation,
             "pickup_location": [selectedPickup[1], selectedPickup[0]],
             "dropoff_location": [selectedDropoff[1], selectedDropoff[0]],
             "cycle_used": cycle
         }
 
-        fetch("http://127.0.0.1:8000/api/plan-trip/",
+        console.log(body)
+        
+        try
         {
-            method: "POST",
-            headers: 
+            const response = await fetch("http://127.0.0.1:8000/api/trips/",
             {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => 
-        {
-            setTripData(data)
-            navigate("/trips")
+                method: "POST",
+                headers: 
+                {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+
+            if(!response.ok)
+            {
+                const error = await response.json()
+                toast.error(error)
+                return;
+            }
+
+            const data = await(response.json())
+            navigate(`/trips/${data.id}`)
+            toast.success(`Trip created successfully with ID: ${data.id}`)
         }
-        )
+        catch (error) 
+        {
+            toast.error(`Error creating trip: ${error}`)
+        }
     }
 
     return ( 
