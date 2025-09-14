@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
+import { CircularProgress } from "@mui/material"
 
 const GenerateTrip = ({setTripData}) => 
 {
@@ -134,7 +135,9 @@ const GenerateTrip = ({setTripData}) =>
                         }/>
                         {
                             pickupLoading &&
-                            <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500">Fetching locations</div>
+                                <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500 flex justify-center items-center">
+                                    <CircularProgress size={22}/>
+                                </div>
                         }
                         {
                             pickupResults.length > 0 &&
@@ -166,7 +169,9 @@ const GenerateTrip = ({setTripData}) =>
                         }/>
                         {
                             dropoffLoading &&
-                            <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500">Fetching locations</div>
+                                <div className="absolute z-10 bg-white border border-gray-300 w-full p-2 text-gray-500 flex justify-center items-center">
+                                    <CircularProgress size={22}/>
+                                </div>
                         }
                         {
                             dropoffResults.length > 0 &&
