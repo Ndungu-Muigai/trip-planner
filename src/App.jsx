@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import GenerateTrip from './Pages/GenerateTrip'
 import Trip from './Pages/Trip'
+import AllTrips from './Pages/Trips'
 
 function App() 
 {
@@ -14,6 +15,7 @@ function App()
       <ToastContainer/>
       <Routes>
         <Route path='/' element={<GenerateTrip/>}></Route>
+        <Route path='/trips' element={<AllTrips />}></Route>
         <Route path='/trips/:id' element={<Trip />}></Route>
       </Routes>     
     </div>
