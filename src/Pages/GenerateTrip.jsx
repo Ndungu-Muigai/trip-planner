@@ -10,12 +10,12 @@ const GenerateTrip = () =>
     const navigate = useNavigate()
 
     //Setting the query parameters and the results
-    const [pickupQuery, setPickupQuery] = useState("");
-    const [dropoffQuery, setDropoffQuery] = useState("");
-    const [pickupResults, setPickupResults] = useState([]);
-    const [dropoffResults, setDropoffResults] = useState([]);
+    const [pickupQuery, setPickupQuery] = useState("")
+    const [dropoffQuery, setDropoffQuery] = useState("")
+    const [pickupResults, setPickupResults] = useState([])
+    const [dropoffResults, setDropoffResults] = useState([])
 
-    const [selectedPickup, setSelectedPickup] = useState(null);
+    const [selectedPickup, setSelectedPickup] = useState(null)
     const [selectedDropoff, setSelectedDropoff] = useState(null)
 
     // Prevent double fetch after selecting
@@ -23,10 +23,10 @@ const GenerateTrip = () =>
     const [dropoffSelected, setDropoffSelected] = useState(false)
 
     //States to track if the search results have been fetched
-    const [pickupLoading, setPickupLoading] = useState(false);
-    const [dropoffLoading, setDropoffLoading] = useState(false);
+    const [pickupLoading, setPickupLoading] = useState(false)
+    const [dropoffLoading, setDropoffLoading] = useState(false)
 
-    const [currentLocation, setCurrentLocation] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState(null)
     const [cycle, setCycle] = useState()
 
     //Fetching the current location
@@ -51,7 +51,7 @@ const GenerateTrip = () =>
                 .then(data => setPickupResults(data.features || []))
                 .catch(err => toast.error(err))
                 .finally(()=> setPickupLoading(false))
-            }, 500);
+            }, 500)
 
             return () => clearTimeout(timeOut)
         }
@@ -71,7 +71,7 @@ const GenerateTrip = () =>
                 .then(data => setDropoffResults(data.features || []))
                 .catch(err => toast.error(err))   
                 .finally(()=> setDropoffLoading(false))
-            }, 500);
+            }, 500)
 
             return () => clearTimeout(timeOut)
         }
@@ -84,7 +84,7 @@ const GenerateTrip = () =>
         if(!selectedPickup || !selectedDropoff || !cycle)
         {
             toast.error("Please fill out all the fields")
-            return;
+            return
         }
 
         const body = 
@@ -114,7 +114,7 @@ const GenerateTrip = () =>
             {
                 const error = await response.json()
                 toast.error(error)
-                return;
+                return
             }
 
             const data = await(response.json())
@@ -132,7 +132,7 @@ const GenerateTrip = () =>
             {
                 currentLocation && 
                 <MapContainer center={currentLocation} zoom={13} className="h-56 rounded-lg shadow z-10">
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors"/>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy OpenStreetMap contributors"/>
                     <Marker position={currentLocation}>
                         <Popup>You are here</Popup>
                     </Marker>
@@ -216,11 +216,11 @@ const GenerateTrip = () =>
                 </div>
 
                 <div className="flex justify-center mt-5">
-                    <button className="btn btn-success text-white" type="submit">Generate trip details</button>
+                    <button className="btn btn-success text-white" type="submit">Generate new trip</button>
                 </div>
             </form>
         </div>
-     );
+     )
 }
  
-export default GenerateTrip;
+export default GenerateTrip

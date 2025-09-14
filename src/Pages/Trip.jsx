@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import { FiClock, FiMapPin, FiTrendingUp, FiX } from "react-icons/fi"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -45,10 +45,16 @@ const TripSummary = () =>
 
     return (
         <div className="pt-3 w-4/5 mx-auto space-y-2">
+            {/* Top Buttons */}
+            <div className="flex justify-end gap-4 mb-2">
+                <Link to={"/"} className="btn btn-success text-white transition">Add New Trip</Link>
+                <Link to={"/trips"} className="btn btn-info text-white transition">View All Trips</Link>
+            </div>
+
             {/* Map at the top */}
             <div className="h-[400px] w-full rounded-lg overflow-hidden shadow">
                 <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
-                <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                <TileLayer attribution='&copy OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <Marker position={current_location}>
                         <Popup>Current location</Popup>
                     </Marker>
