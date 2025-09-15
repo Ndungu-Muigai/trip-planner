@@ -11,6 +11,7 @@ const GenerateTrip = () =>
     const navigate = useNavigate()
     const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 
+    console.log(BACKEND_URL)
     //Setting the query parameters and the results
     const [pickupQuery, setPickupQuery] = useState("")
     const [dropoffQuery, setDropoffQuery] = useState("")
