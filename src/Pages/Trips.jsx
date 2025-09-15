@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useRef } from "react"
 import { toast } from "react-toastify"
 import { Link } from "react-router-dom"
@@ -9,6 +10,7 @@ const AllTrips = () =>
     const [trips, setTrips] = useState([])
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 
     // Cache for location names
     const locationCache = useRef({})
@@ -17,7 +19,7 @@ const AllTrips = () =>
     {
         try 
         {
-            const response = await fetch("http://127.0.0.1:8000/api/trips/")
+            const response = await fetch(`${BACKEND_URL}/api/trips/`)
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
             const data = await response.json()
             setTrips(data)

@@ -13,11 +13,13 @@ const TripSummary = () =>
     const [legModal, setLegModal] = useState(false)
     const [selectedLeg, setSelectedLeg] = useState()
 
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
+
     const fetchData = async () => 
     {
         try 
         {
-            const response = await fetch(`http://127.0.0.1:8000/api/trips/${id}/`)
+            const response = await fetch(`${BACKEND_URL}/api/trips/${id}/`)
             if (!response.ok) 
             {
                 throw new Error(`HTTP error! status: ${response.status}`)

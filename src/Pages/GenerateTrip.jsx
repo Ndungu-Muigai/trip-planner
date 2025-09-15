@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 
@@ -8,6 +9,7 @@ import { CircularProgress } from "@mui/material"
 const GenerateTrip = () => 
 {
     const navigate = useNavigate()
+    const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 
     //Setting the query parameters and the results
     const [pickupQuery, setPickupQuery] = useState("")
@@ -46,7 +48,7 @@ const GenerateTrip = () =>
             setPickupLoading(true)
             const timeOut = setTimeout(() => 
             {
-                fetch(`http://127.0.0.1:8000/api/locations/search?text=${pickupQuery}`)
+                fetch(`${BACKEND_URL}/api/locations/search?text=${pickupQuery}`)
                 .then(response => response.json())
                 .then(data => setPickupResults(data.features || []))
                 .catch(err => toast.error(err))
@@ -66,7 +68,7 @@ const GenerateTrip = () =>
             setDropoffLoading(true)
             const timeOut = setTimeout(() => 
             {
-                fetch(`http://127.0.0.1:8000/api/locations/search?text=${dropoffQuery}`)
+                fetch(`${BACKEND_URL}/api/locations/search?text=${dropoffQuery}`)
                 .then(response => response.json())
                 .then(data => setDropoffResults(data.features || []))
                 .catch(err => toast.error(err))   
@@ -99,7 +101,7 @@ const GenerateTrip = () =>
         
         try
         {
-            const response = await fetch("http://127.0.0.1:8000/api/trips/",
+            const response = await fetch(`${BACKEND_URL}/api/trips/`,
             {
                 method: "POST",
                 headers: 
