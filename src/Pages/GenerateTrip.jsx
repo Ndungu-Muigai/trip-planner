@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { toast } from "react-toastify"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { CircularProgress } from "@mui/material"
 
 const GenerateTrip = () => 
@@ -222,7 +222,7 @@ const GenerateTrip = () =>
                     </select>
                 </div>
 
-                <div className="flex justify-center mt-5">
+                <div className="flex justify-center items-center gap-12 mt-5">
                     <button className="btn btn-success text-white" type="submit" disabled={generatingTrip}>
                         {
                             generatingTrip
@@ -232,6 +232,7 @@ const GenerateTrip = () =>
                                 "Generate new trip"
                         }
                     </button>
+                    <Link to="/trips" className="btn btn-info text-white" disabled={generatingTrip}>View generated trips</Link>
                 </div>
             </form>
         </div>
