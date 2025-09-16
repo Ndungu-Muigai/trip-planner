@@ -46,7 +46,7 @@ const TripSummary = () =>
     const legColors = ["blue", "green", "orange", "purple"]
 
     return (
-        <div className="pt-3 w-4/5 mx-auto space-y-2">
+        <div className="pt-2 w-4/5 mx-auto space-y-2">
             {/* Top Buttons */}
             <div className="flex justify-end gap-4 mb-2">
                 <Link to={"/"} className="btn btn-success text-white transition">Add New Trip</Link>
@@ -54,7 +54,7 @@ const TripSummary = () =>
             </div>
 
             {/* Map at the top */}
-            <div className="h-[400px] w-full rounded-lg overflow-hidden shadow">
+            <div className="h-[350px] w-full rounded-lg overflow-hidden shadow">
                 <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
                 <TileLayer attribution='&copy OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <Marker position={current_location}>
@@ -88,9 +88,12 @@ const TripSummary = () =>
             </div>
 
             {/* Trip Summary */}
-            <div className="bg-white shadow rounded-lg px-4 py-3">
-                <h2 className="text-lg font-semibold mb-2">Trip Summary</h2>
-                <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white shadow rounded-lg p-4">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                    <h2 className="text-lg font-semibold mb-2 uppercase underline">Trip Summary</h2>
+                    <button className="btn btn-success text-white hidden md:block">Generate EDS log</button>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-2">
                     <div className="flex items-center gap-2">
                         <FiClock className="text-blue-500" />
                         <span><strong>{duration}</strong> hrs total</span>
@@ -107,6 +110,9 @@ const TripSummary = () =>
                         <span>Rests: {rests?.length || 0}</span><br />
                         <span>Fuel stops: {fuel_stops || 0}</span>
                     </div>
+                </div>
+                <div className="flex justify-center mt-2 md:hidden">
+                    <button className="btn btn-success text-white">Generate EDS log</button>
                 </div>
             </div>
 
