@@ -51,8 +51,6 @@ const TripSummary = () =>
     //Generating the EDS log
     const generateEDS = trip =>
     {
-        console.log("Trip log generation")
-
         const doc = new jsPDF("p", "mm", "a4")
 
         // Add the background template
