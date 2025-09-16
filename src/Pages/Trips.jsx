@@ -70,15 +70,11 @@ const AllTrips = () =>
                         loading 
                         ? 
                             (
-                                // Show spinner rows while loading trips
-                                Array.from({ length: TRIPS_PER_PAGE }).map((_, idx) => 
-                                (
-                                    <tr key={idx} className="border-b">
-                                        <td colSpan={5} className="py-6 text-center">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-                                        </td>
-                                    </tr>
-                                ))
+                                <tr className="border-b">
+                                    <td colSpan={5} className="py-6 text-center">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                                    </td>
+                                </tr>
                             ) 
                         : 
                             currentTrips.length === 0 
