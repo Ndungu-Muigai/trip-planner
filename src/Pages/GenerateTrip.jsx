@@ -232,7 +232,15 @@ const GenerateTrip = () =>
                                 "Generate new trip"
                         }
                     </button>
-                    <Link to="/trips" className="btn btn-info text-white" disabled={generatingTrip}>View generated trips</Link>
+                    <Link to="/trips" className="btn btn-info text-white" disabled={generatingTrip}>
+                        {
+                            generatingTrip
+                            ?
+                                <CircularProgress size={22}/>
+                            :
+                                "View generated trips"
+                        }
+                    </Link>
                 </div>
             </form>
         </div>
