@@ -86,7 +86,7 @@ const AllTrips = () =>
                                 ) 
                             : 
                                 (
-                                    currentTrips.map((trip) => (
+                                    [...currentTrips].reverse().map((trip) => (
                                         <TripRow key={trip.id} trip={trip} locationCache={locationCache} />
                                     ))
                                 )
