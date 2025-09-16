@@ -5,6 +5,9 @@ import { Link, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
+import jsPDF from "jspdf"
+import Log from "/Log.png"
+
 const TripSummary = () => 
 {
     const {id} = useParams()
@@ -44,6 +47,36 @@ const TripSummary = () =>
 
     // Define colors for legs
     const legColors = ["blue", "green", "orange", "purple"]
+
+    //Generating the EDS log
+    const generateEDS = trip =>
+    {
+        console.log("Trip log generation")
+
+        const doc = new jsPDF("p", "mm", "a4")
+
+        // Add the background template
+        doc.addImage(Log, "PNG", 0, 0, 210, 297)
+
+        // Example overlays
+        doc.setFontSize(10)
+        doc.text(new Date(trip.created_at).toLocaleDateString(), 160, 25)
+        doc.text(`TRIP-${trip.id}`, 160, 32)
+        doc.text(trip.user?.name || "N/A", 40, 40)
+
+        // Pickup & Dropoff
+        doc.text(`${trip.legs[0].start_location}`, 40, 55)
+        doc.text(`${trip.legs[0].end_location}`, 40, 63)
+
+        // Distance + Duration
+        doc.text(`${trip.legs[0].distance} km`, 160, 55)
+        doc.text(`${trip.legs[0].driving_hours} hrs`, 160, 63)
+
+        // Instead of saving → open in new tab
+        const pdfBlob = doc.output("blob")
+        const pdfUrl = URL.createObjectURL(pdfBlob)
+        window.open(pdfUrl, "_blank")
+    }
 
     return (
         <div className="pt-2 w-4/5 mx-auto space-y-2">
@@ -91,7 +124,7 @@ const TripSummary = () =>
             <div className="bg-white shadow rounded-lg p-4">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <h2 className="text-lg font-semibold mb-2 uppercase underline">Trip Summary</h2>
-                    <button className="btn btn-success text-white hidden md:block">Generate EDS log</button>
+                    <button className="btn btn-success text-white hidden md:block" onClick={()=> generateEDS(trip)}>Generate EDS log</button>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-2">
                     <div className="flex items-center gap-2">
@@ -112,7 +145,7 @@ const TripSummary = () =>
                     </div>
                 </div>
                 <div className="flex justify-center mt-2 md:hidden">
-                    <button className="btn btn-success text-white">Generate EDS log</button>
+                    <button className="btn btn-success text-white" onClick={()=> generateEDS(trip)}>Generate EDS log</button>
                 </div>
             </div>
 
