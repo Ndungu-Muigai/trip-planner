@@ -163,7 +163,7 @@ const TripRow = ({ trip, locationCache }) =>
         ) 
     : 
         (
-            <tr className="hover:bg-base-300">
+            <tr>
                 <td className="py-3 px-4">{pickupName}</td>
                 <td className="py-3 px-4">{dropoffName}</td>
                 <td className="py-3 px-4">{trip.distance}</td>
