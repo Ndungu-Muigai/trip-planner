@@ -55,44 +55,46 @@ const AllTrips = () =>
                 <Link to={"/"} className="btn btn-success text-white">Create a new trip</Link>
             </div>
 
-            <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th className="py-2 px-4 text-left">Pickup Location</th>
-                        <th className="py-2 px-4 text-left">Dropoff Location</th>
-                        <th className="py-2 px-4 text-left">Distance (miles)</th>
-                        <th className="py-2 px-4 text-left">Duration (hrs)</th>
-                        <th className="py-2 px-4 text-left">View</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        loading 
-                        ? 
-                            (
-                                <tr className="border-b">
-                                    <td colSpan={5} className="py-6 text-center">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-                                    </td>
-                                </tr>
-                            ) 
-                        : 
-                            currentTrips.length === 0 
+            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-gray-100">
+                <table className="table">
+                    <thead className="text-black">
+                        <tr>
+                            <th className="py-2 px-4 text-left">Pickup Location</th>
+                            <th className="py-2 px-4 text-left">Dropoff Location</th>
+                            <th className="py-2 px-4 text-left">Distance (miles)</th>
+                            <th className="py-2 px-4 text-left">Duration (hrs)</th>
+                            <th className="py-2 px-4 text-left">View</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-black">
+                        {
+                            loading 
                             ? 
                                 (
-                                    <tr>
-                                        <td colSpan={5} className="py-4 text-center text-gray-500">No trips found.</td>
+                                    <tr className="border-b">
+                                        <td colSpan={5} className="py-6 text-center">
+                                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                                        </td>
                                     </tr>
                                 ) 
                             : 
-                                (
-                                    [...currentTrips].reverse().map((trip) => (
-                                        <TripRow key={trip.id} trip={trip} locationCache={locationCache} />
-                                    ))
-                                )
-                    }
-                </tbody>
-            </table>
+                                currentTrips.length === 0 
+                                ? 
+                                    (
+                                        <tr>
+                                            <td colSpan={5} className="py-4 text-center text-gray-500">No trips found.</td>
+                                        </tr>
+                                    ) 
+                                : 
+                                    (
+                                        [...currentTrips].reverse().map((trip) => (
+                                            <TripRow key={trip.id} trip={trip} locationCache={locationCache} />
+                                        ))
+                                    )
+                        }
+                    </tbody>
+                </table>
+            </div>
 
             {/* Pagination */}
             {
@@ -161,7 +163,7 @@ const TripRow = ({ trip, locationCache }) =>
         ) 
     : 
         (
-            <tr className="border-b hover:bg-gray-50">
+            <tr className="hover:bg-base-300">
                 <td className="py-3 px-4">{pickupName}</td>
                 <td className="py-3 px-4">{dropoffName}</td>
                 <td className="py-3 px-4">{trip.distance}</td>
