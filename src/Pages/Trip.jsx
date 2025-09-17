@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import { FiClock, FiMapPin, FiTrendingUp, FiX } from "react-icons/fi"
 import { Link, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
 
 import jsPDF from "jspdf"
 import Log from "/Log.png"
@@ -16,12 +15,16 @@ const TripSummary = () =>
     const [legModal, setLegModal] = useState(false)
     const [selectedLeg, setSelectedLeg] = useState()
 
+    //State to keep track of the loading state of the trip details
+    const [isLoadingData, setIsLoadingData] = useState(false)
+
     const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 
     const fetchData = async () => 
     {
         try 
         {
+            setIsLoadingData(true)
             const response = await fetch(`${BACKEND_URL}/api/trips/${id}/`)
             if (!response.ok) 
             {
@@ -29,10 +32,12 @@ const TripSummary = () =>
             }
             const data = await response.json()
             setTrip(data)
+            setIsLoadingData(false)
         } 
         catch (error) 
         {
-            toast.error("Failed to fetch trip data: " + error.message)
+            console.error("Failed to fetch trip data: " + error.message)
+            setIsLoadingData(false)
         }
     }
 
@@ -57,8 +62,25 @@ const TripSummary = () =>
         )
     }
 
+    //Component that will be shown when there is no trip data to be displayed
+    const NoTripData = () => 
+    {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-6">
+                <FiMapPin className="text-gray-400 w-16 h-16 mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">No Trip Data Found</h2>
+                <p className="text-gray-500 mb-4">
+                    Looks like there are no trips available at the moment.  
+                    You can start by adding a new trip.
+                </p>
+                <Link to="/" className="btn btn-success text-white rounded-lg shadow hover:opacity-90 transition">Add New Trip</Link>
+            </div>
+        )
+    }
 
-    if (!trip) return <LoadingSpinner/>
+    if (isLoadingData) return <LoadingSpinner/>
+
+    if(!trip) return <NoTripData/>
 
     const { duration, current_location, pickup_location, dropoff_location, distance, driving_hours, rests, fuel_stops, legs } = trip
 
@@ -103,7 +125,7 @@ const TripSummary = () =>
 
             {/* Map at the top */}
             <div className="h-[350px] w-full rounded-lg overflow-hidden shadow">
-                <MapContainer center={[pickup_location[0], pickup_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
+                <MapContainer center={[current_location[0], current_location[1]]} zoom={13} scrollWheelZoom={true} className="h-full w-full z-0">
                 <TileLayer attribution='&copy OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <Marker position={current_location}>
                         <Popup>Current location</Popup>
